@@ -10,6 +10,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.mobileplatformsandprogramming.LogedUserActivity">
 
+    <ImageView
+        android:id="@+id/imageTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextMovieName"
+        android:layout_alignStart="@+id/editTextMovieName" />
+
     <Button
         android:text="Movie name"
         android:layout_width="wrap_content"
@@ -18,6 +25,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/btnAsync" />
+
 
     <EditText
         android:layout_width="wrap_content"
@@ -28,4 +36,13 @@
         android:layout_alignBottom="@+id/btnAsync"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:id="@+id/listItems"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnAsync">
+    </ListView>
+
+
 </RelativeLayout>

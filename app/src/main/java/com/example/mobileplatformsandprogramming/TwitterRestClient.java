@@ -9,6 +9,7 @@ import com.loopj.android.http.*;
 public class TwitterRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
     private static final String BASE_URL = "http://www.theimdbapi.org/api/find/movie?title=";
+//    private static final String BASE_URL = "http://jsonplaceholder.typicode.com/";
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getAbsoluteUrl(url), params, responseHandler);

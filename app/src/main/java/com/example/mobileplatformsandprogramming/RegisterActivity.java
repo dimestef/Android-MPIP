@@ -41,33 +41,29 @@ public class RegisterActivity extends AppCompatActivity {
                 List<String> usernames = new ArrayList<String>();
                 Boolean canInsert = true;
                 Cursor res = dh.getAllData();
-                if (res.getCount() == 0) {
-                    showMessage("Error", "No data");
+                if (!editTextPassword.getText().toString().equals(editTextReenterPassword.getText().toString())) {
+                    showMessage("Title", "Passwords doesn't match");
                 } else {
-                    if (!editTextPassword.getText().toString().equals(editTextReenterPassword.getText().toString())) {
-                        showMessage("Title", "Passwords doesn't match");
-                    } else {
-                        StringBuffer sb = new StringBuffer();
-                        while (res.moveToNext()) {
-                            sb.append("Name " + res.getString(1) + "\n");
-                            usernames.add(res.getString(1));
-                        }
+                    StringBuffer sb = new StringBuffer();
+                    while (res.moveToNext()) {
+                        sb.append("Name " + res.getString(1) + "\n");
+                        usernames.add(res.getString(1));
+                    }
 
-                        for (String s : usernames) {
-                            if (s.equals(editTextUsername.getText().toString()) && s.equals("")) {
-                                canInsert = false;
-                                showMessage("Title", "The username " + editTextUsername.getText().toString() + " exists!");
-                                break;
-                            }
+                    for (String s : usernames) {
+                        if (s.equals(editTextUsername.getText().toString()) || s.equals("")) {
+                            canInsert = false;
+                            showMessage("Title", "The username " + editTextUsername.getText().toString() + " exists!");
+                            break;
                         }
+                    }
 
-                        if (canInsert) {
-                            dh.registerUser(editTextUsername.getText().toString(), editTextPassword.getText().toString());
-                            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                    if (canInsert) {
+                        dh.registerUser(editTextUsername.getText().toString(), editTextPassword.getText().toString());
+                        Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
 
-                            i.putExtra("userSaved", editTextUsername.getText().toString());
-                            startActivity(i);
-                        }
+                        i.putExtra("userSaved", editTextUsername.getText().toString());
+                        startActivity(i);
                     }
                 }
             }
