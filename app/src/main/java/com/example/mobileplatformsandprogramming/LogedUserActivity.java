@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
@@ -41,11 +42,14 @@ public class LogedUserActivity extends Activity {
     ArrayList<MovieModel> moviesToBeShown = null;
     MovieAdapter movieAdapter;
     ListView movieBaseAdapterView;
+    DataHelper dh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loged_user);
+
+        dh = new DataHelper(this);
 
         showInstructions("Action: ", "select a movie");
 
@@ -73,9 +77,10 @@ public class LogedUserActivity extends Activity {
                 MovieModel movie = movieAdapter.getItem(position);
 
                 Toast.makeText(LogedUserActivity.this, movie.getName(), Toast.LENGTH_SHORT).show();
-                showMessage("Movie title: ", movie.getName());
+                showMessage("Movie title: ", movie);
             }
         });
+
     }
 
     private void makeAsyncCall() throws JSONException {
@@ -85,7 +90,7 @@ public class LogedUserActivity extends Activity {
         btnAsync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TwitterRestClient.get("inception", null, new JsonHttpResponseHandler() {
+                TwitterRestClient.get("transformers", null, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
@@ -138,13 +143,41 @@ public class LogedUserActivity extends Activity {
 
     }
 
-    private void showMessage(String title, final String message) {
+    private void showMessage(String title, final MovieModel movie) {
         AlertDialog.Builder builder = new AlertDialog.Builder(LogedUserActivity.this);
         builder.setCancelable(true);
         builder.setTitle(title);
-        builder.setNeutralButton("Wishlist",  new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Add to Wishlist", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(LogedUserActivity.this, message + "Bravo", Toast.LENGTH_SHORT).show();
+//                TUKA TREBA LOGIKATA ZA ZAPIS VO BAZA ZA WISHLIST
+                Boolean canInsert = true;
+                List<String> checkDuplicates = new ArrayList<String>();
+
+                Cursor res = dh.getAllWishlistData();
+                while (res.moveToNext()) {
+                    checkDuplicates.add(res.getString(1));
+                }
+
+                for (String s : checkDuplicates) {
+                    if (s.equals(movie.getName())) {
+                        canInsert = false;
+                        showInstructions("Title", "The movie with name " + movie.getName() + " exists!");
+                        break;
+                    }
+                }
+
+                if (canInsert) {
+                    dh.addMovieToWishlist(movie.getName(), movie.getImdbId());
+                }
+
+                res = dh.getAllWishlistData();
+                StringBuffer sb = new StringBuffer();
+                while (res.moveToNext()) {
+                    sb.append("Name " + res.getString(1) + "\n");
+                    checkDuplicates.add(res.getString(1));
+                }
+
+                Toast.makeText(LogedUserActivity.this, sb, Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -152,7 +185,7 @@ public class LogedUserActivity extends Activity {
                 dialog.cancel();
             }
         });
-        builder.setMessage(message);
+        builder.setMessage(movie.getName());
         builder.show();
     }
 

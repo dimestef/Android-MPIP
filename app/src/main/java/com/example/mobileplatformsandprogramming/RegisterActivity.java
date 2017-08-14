@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     for (String s : usernames) {
-                        if (s.equals(editTextUsername.getText().toString()) || s.equals("")) {
+                        if (s.equals(editTextUsername.getText().toString())) {
                             canInsert = false;
                             showMessage("Title", "The username " + editTextUsername.getText().toString() + " exists!");
                             break;
