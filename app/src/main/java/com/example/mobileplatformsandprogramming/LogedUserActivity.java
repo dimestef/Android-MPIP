@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -81,13 +82,31 @@ public class LogedUserActivity extends Activity {
             }
         });
 
+        ImageView imageSearch = (ImageView) findViewById(R.id.imageSearch);
+        imageSearch.setImageResource(R.drawable.search);
+        
+        showWishlistList();
+    }
+
+    private void showWishlistList() {
+        Button btnShowWishlist = (Button) findViewById(R.id.btnShowWishlist);
+        btnShowWishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+  /*              TUKA DA SE PRATI ARRAYLIST VO DRUGOTO ACTIVITY ILI DA SE POVRZI SO BASEADAPTER NEKAKO...        */
+                Intent intent = new Intent(LogedUserActivity.this, BaseAdapterTestActivity.class);
+                intent.putExtra("listedMovies", moviesToBeShown);
+                startActivity(intent);
+            }
+        });
     }
 
     private void makeAsyncCall() throws JSONException {
-        Button btnAsync = (Button) findViewById(R.id.btnAsync);
+//        Button btnAsync = (Button) findViewById(R.id.btnAsync);
+        ImageView imageAsync = (ImageView) findViewById(R.id.imageSearch);
         EditText movieName = (EditText) findViewById(R.id.editTextMovieName);
 
-        btnAsync.setOnClickListener(new View.OnClickListener() {
+        imageAsync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TwitterRestClient.get("transformers", null, new JsonHttpResponseHandler() {
@@ -113,27 +132,10 @@ public class LogedUserActivity extends Activity {
                                 JSONObject iOSObject = jObject.getJSONObject("poster");
                                 tempMovie.setImageUrl(iOSObject.getString("thumb"));
                                 moviesToBeShown.add(tempMovie);
-//                                    allReturnedMovies.put(((JSONObject)timeline.get(i)).getString("title"), ((JSONObject)timeline.get(i)).getString("imdb_id"));
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-//                        String tweetText = null;
-//                        try {
-                        System.out.println(firstEvent);
-//                            tweetText = firstEvent.getString("email");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-
-                        // Do something with the response
-//                        System.out.println(tweetText);
-
-                        /*              TUKA DA SE PRATI ARRAYLIST VO DRUGOTO ACTIVITY ILI DA SE POVRZI SO BASEADAPTER NEKAKO...        */
-//                        Intent intent = new Intent(LogedUserActivity.this, BaseAdapterTestActivity.class);
-//                        intent.putExtra("listedMovies", moviesToBeShown);
-//                        startActivity(intent);
 
                         movieAdapter.changeListItem(moviesToBeShown);
                     }
@@ -149,7 +151,6 @@ public class LogedUserActivity extends Activity {
         builder.setTitle(title);
         builder.setNeutralButton("Add to Wishlist", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-//                TUKA TREBA LOGIKATA ZA ZAPIS VO BAZA ZA WISHLIST
                 Boolean canInsert = true;
                 List<String> checkDuplicates = new ArrayList<String>();
 

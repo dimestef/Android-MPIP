@@ -2,6 +2,7 @@ package com.example.mobileplatformsandprogramming;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -96,4 +97,10 @@ public class DataHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from " + TABLE_WISHLIST, null);
         return res;
     }
+
+    public boolean deleteMovieWishlistData(Integer movieIdDelete) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_WISHLIST, WISHLIST_COL_Id + "=" + movieIdDelete, null) > 0;
+    }
+
 }

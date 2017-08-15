@@ -1,11 +1,16 @@
 package com.example.mobileplatformsandprogramming;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -13,40 +18,117 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class BaseAdapterTestActivity extends AppCompatActivity {
     MovieAdapter movieAdapter;
+    DataHelper dh;
+    ArrayList<String> checkDuplicates;
+    HashMap<String, String> checkDuplicatesHash;
+    ListView wishlistMovieBaseAdapterView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_adapter_test);
 
+        dh = new DataHelper(this);
+
+        checkDuplicates = new ArrayList<String>();
+        checkDuplicatesHash = new HashMap<>();
+
+        Cursor res = dh.getAllWishlistData();
+        while (res.moveToNext()) {
+            checkDuplicatesHash.put(res.getString(0), res.getString(1));
+            checkDuplicates.add(res.getString(1));
+        }
+
         /*              KAKO MOZI DA SE ZEMI PREKU INTENT ARRAYLIST             */
-        ArrayList<MovieModel> challenge = (ArrayList<MovieModel>) getIntent().getSerializableExtra("listedMovies");
-        Toast.makeText(BaseAdapterTestActivity.this, "Movies: " + challenge.get(0).getYear(), Toast.LENGTH_LONG).show();
+//        ArrayList<MovieModel> challenge = (ArrayList<MovieModel>) getIntent().getSerializableExtra("listedMovies");
+//        Toast.makeText(BaseAdapterTestActivity.this, "Movies: " + challenge.get(0).getName(), Toast.LENGTH_LONG).show();
 
         movieAdapter = new MovieAdapter();
         final ListView exampleView = (ListView) findViewById(R.id.movieListItems);
         exampleView.setAdapter(movieAdapter);
-        movieAdapter.changeListItem(challenge);
+        movieAdapter.changeListItem(checkDuplicates);
+
+        wishlistMovieBaseAdapterView = (ListView) findViewById(R.id.movieListItems);
+        wishlistMovieBaseAdapterView.setAdapter(movieAdapter);
+
+        wishlistMovieBaseAdapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(BaseAdapterTestActivity.this, movieAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                deleteMovieWishlist(position);
+            }
+        });
+    }
+
+    private void deleteMovieWishlist(final int moviePosition) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(BaseAdapterTestActivity.this);
+        builder.setCancelable(true);
+        builder.setTitle(movieAdapter.getItem(moviePosition));
+        builder.setNeutralButton("Delete move", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                /*for (int i = checkDuplicates.size() - 1; i >= 0; i--) {
+                    if (checkDuplicates.get(i).equals(movieAdapter.getItem(moviePosition))) {
+                        checkDuplicates.remove(i);
+                    }
+                }*/
+
+//                Iterator<String> iterator = checkDuplicates.iterator();
+//                while (iterator.hasNext()){
+//                    if(iterator.next().equals(movieAdapter.getItem(moviePosition))){
+//                        iterator.remove();
+//                    }
+//                }
+
+                for (Map.Entry<String, String> entry : checkDuplicatesHash.entrySet())
+                {
+                    if(entry.getValue().equals(movieAdapter.getItem(moviePosition))){
+                        dh.deleteMovieWishlistData(Integer.parseInt(entry.getKey()));
+                        break;
+                    }
+                }
+
+                checkDuplicates = new ArrayList<String>();
+
+                Cursor res = dh.getAllWishlistData();
+                while (res.moveToNext()) {
+                    checkDuplicates.add(res.getString(1));
+                }
+
+                movieAdapter.changeListItem(checkDuplicates);
+//                Toast.makeText(BaseAdapterTestActivity.this, "", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.setMessage(movieAdapter.getItem(moviePosition));
+        builder.show();
     }
 
     public class MovieAdapter extends BaseAdapter {
 //        List<MovieModel> moviesList = getUsersList();
-        List<MovieModel> moviesList;
+        List<String> moviesList;
 
         public MovieAdapter() {
-            this.moviesList = new ArrayList<MovieModel>();
+            this.moviesList = new ArrayList<String>();
         }
 
-        public void addItem(MovieModel item) {
+        public void addItem(String item) {
             this.moviesList.add(item);
             notifyDataSetChanged();
         }
 
-        public void changeListItem(ArrayList<MovieModel> itemList) {
+        public void changeListItem(List<String> itemList) {
+            this.moviesList = new ArrayList<String>();
             this.moviesList.addAll(itemList);
             notifyDataSetChanged();
         }
@@ -57,7 +139,7 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
         }
 
         @Override
-        public MovieModel getItem(int position) {
+        public String getItem(int position) {
             return moviesList.get(position);
         }
 
@@ -71,24 +153,18 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) BaseAdapterTestActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_of_movies, (ViewGroup) convertView, false);
+                convertView = inflater.inflate(R.layout.list_of_wishlist, (ViewGroup) convertView, false);
             }
 
-            TextView movieName = (TextView) convertView.findViewById(R.id.movieName);
-            TextView movieDirector = (TextView) convertView.findViewById(R.id.movieDirector);
-            TextView movieYear = (TextView) convertView.findViewById(R.id.movieYear);
+            TextView wishlistMovieName = (TextView) convertView.findViewById(R.id.wishlistMovieName);
 
-            MovieModel movieModel = moviesList.get(position);
-
-            movieName.setText(movieModel.getName());
-            movieDirector.setText(movieModel.getDirector());
-            movieYear.setText(movieModel.getYear());
+            wishlistMovieName.setText(moviesList.get(position));
 
             return convertView;
         }
     }
 
-    public List<MovieModel> getUsersList() {
+    /*public List<MovieModel> getUsersList() {
         List<MovieModel> userList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
@@ -100,5 +176,5 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
         }
 
         return userList;
-    }
+    }*/
 }
