@@ -46,10 +46,6 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
             checkDuplicates.add(res.getString(1));
         }
 
-        /*              KAKO MOZI DA SE ZEMI PREKU INTENT ARRAYLIST             */
-//        ArrayList<MovieModel> challenge = (ArrayList<MovieModel>) getIntent().getSerializableExtra("listedMovies");
-//        Toast.makeText(BaseAdapterTestActivity.this, "Movies: " + challenge.get(0).getName(), Toast.LENGTH_LONG).show();
-
         movieAdapter = new MovieAdapter();
         final ListView exampleView = (ListView) findViewById(R.id.movieListItems);
         exampleView.setAdapter(movieAdapter);
@@ -73,19 +69,6 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
         builder.setTitle(movieAdapter.getItem(moviePosition));
         builder.setNeutralButton("Delete move", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                /*for (int i = checkDuplicates.size() - 1; i >= 0; i--) {
-                    if (checkDuplicates.get(i).equals(movieAdapter.getItem(moviePosition))) {
-                        checkDuplicates.remove(i);
-                    }
-                }*/
-
-//                Iterator<String> iterator = checkDuplicates.iterator();
-//                while (iterator.hasNext()){
-//                    if(iterator.next().equals(movieAdapter.getItem(moviePosition))){
-//                        iterator.remove();
-//                    }
-//                }
-
                 for (Map.Entry<String, String> entry : checkDuplicatesHash.entrySet())
                 {
                     if(entry.getValue().equals(movieAdapter.getItem(moviePosition))){
@@ -115,7 +98,6 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
     }
 
     public class MovieAdapter extends BaseAdapter {
-//        List<MovieModel> moviesList = getUsersList();
         List<String> moviesList;
 
         public MovieAdapter() {
@@ -163,18 +145,4 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
             return convertView;
         }
     }
-
-    /*public List<MovieModel> getUsersList() {
-        List<MovieModel> userList = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            MovieModel user = new MovieModel();
-            user.setName("Dime " + i);
-            user.setDirector("Stefanovski " + i);
-            user.setYear("Year " + i);
-            userList.add(user);
-        }
-
-        return userList;
-    }*/
 }

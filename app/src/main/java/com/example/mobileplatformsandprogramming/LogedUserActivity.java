@@ -39,7 +39,6 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 
 public class LogedUserActivity extends Activity {
-    //    Map<String, String> allReturnedMovies = null;
     ArrayList<MovieModel> moviesToBeShown = null;
     MovieAdapter movieAdapter;
     ListView movieBaseAdapterView;
@@ -76,7 +75,6 @@ public class LogedUserActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MovieModel movie = movieAdapter.getItem(position);
-
                 Toast.makeText(LogedUserActivity.this, movie.getName(), Toast.LENGTH_SHORT).show();
                 showMessage("Movie title: ", movie);
             }
@@ -93,7 +91,6 @@ public class LogedUserActivity extends Activity {
         btnShowWishlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-  /*              TUKA DA SE PRATI ARRAYLIST VO DRUGOTO ACTIVITY ILI DA SE POVRZI SO BASEADAPTER NEKAKO...        */
                 Intent intent = new Intent(LogedUserActivity.this, BaseAdapterTestActivity.class);
                 intent.putExtra("listedMovies", moviesToBeShown);
                 startActivity(intent);
@@ -102,14 +99,13 @@ public class LogedUserActivity extends Activity {
     }
 
     private void makeAsyncCall() throws JSONException {
-//        Button btnAsync = (Button) findViewById(R.id.btnAsync);
         ImageView imageAsync = (ImageView) findViewById(R.id.imageSearch);
-        EditText movieName = (EditText) findViewById(R.id.editTextMovieName);
+        final EditText movieName = (EditText) findViewById(R.id.editTextMovieName);
 
         imageAsync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TwitterRestClient.get("transformers", null, new JsonHttpResponseHandler() {
+                TwitterRestClient.get(movieName.getText().toString(), null, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
@@ -118,7 +114,6 @@ public class LogedUserActivity extends Activity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray timeline) {
                         JSONObject firstEvent = null;
-//                            Map<String, String> allReturnedMovies = new HashMap();
                         moviesToBeShown = new ArrayList<MovieModel>();
                         try {
                             firstEvent = (JSONObject) timeline.get(0);
@@ -204,7 +199,6 @@ public class LogedUserActivity extends Activity {
     }
 
     public class MovieAdapter extends BaseAdapter {
-        //        List<MovieModel> moviesList = getUsersList();
         List<MovieModel> moviesList;
         ImageView imageView;
 
@@ -218,6 +212,7 @@ public class LogedUserActivity extends Activity {
         }
 
         public void changeListItem(ArrayList<MovieModel> itemList) {
+            this.moviesList = new ArrayList<MovieModel>();
             this.moviesList.addAll(itemList);
             notifyDataSetChanged();
         }
@@ -269,18 +264,4 @@ public class LogedUserActivity extends Activity {
             return convertView;
         }
     }
-
-    /*public List<MovieModel> getUsersList() {
-        List<MovieModel> userList = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            MovieModel user = new MovieModel();
-            user.setName("Dime " + i);
-            user.setDirector("Stefanovski " + i);
-            user.setYear("Year " + i);
-            userList.add(user);
-        }
-
-        return userList;
-    }*/
 }
