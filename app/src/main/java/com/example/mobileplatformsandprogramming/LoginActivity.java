@@ -2,12 +2,15 @@ package com.example.mobileplatformsandprogramming;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +35,18 @@ public class LoginActivity extends AppCompatActivity {
             String value = extras.getString("userSaved");
             Toast.makeText(LoginActivity.this, "User: " + value + " is saved", Toast.LENGTH_SHORT).show();
         }
+
+        ImageView imageSearch = (ImageView) findViewById(R.id.loginLogo);
+        imageSearch.setImageResource(R.drawable.logologin);
+
+        ImageView iconLogin = (ImageView) findViewById(R.id.iconLogin);
+        iconLogin.setImageResource(R.drawable.login);
+
+        ImageView iconPassword = (ImageView) findViewById(R.id.iconPassword);
+        iconPassword.setImageResource(R.drawable.password);
+
+        CardView cardView = (CardView) findViewById(R.id.cv);
+        cardView.setCardBackgroundColor(Color.argb(1, 111,111,111));
 
         loginUser();
         registerUser();

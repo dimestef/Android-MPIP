@@ -51,7 +51,7 @@ public class LogedUserActivity extends Activity {
 
         dh = new DataHelper(this);
 
-        showInstructions("Action: ", "select a movie");
+        showInstructions("Instructions:", "1. Search a movie by name\n2. Select a movie ");
 
         movieAdapter = new MovieAdapter();
 
@@ -108,7 +108,22 @@ public class LogedUserActivity extends Activity {
                 TwitterRestClient.get(movieName.getText().toString(), null, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        // If the response is JSONObject instead of expected JSONArray
+                        moviesToBeShown = new ArrayList<MovieModel>();
+
+                        MovieModel tempMovie = new MovieModel();
+                        try {
+                            JSONObject iOSObject = response.getJSONObject("data");
+                            tempMovie.setName(iOSObject.getString("name"));
+                            tempMovie.setDirector(iOSObject.getString("director"));
+                            tempMovie.setYear(iOSObject.getString("year"));
+                            tempMovie.setImdbId(iOSObject.getString("imdb_id"));
+                            tempMovie.setImageUrl(iOSObject.getString("poster_url"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        moviesToBeShown.add(tempMovie);
+
+                        movieAdapter.changeListItem(moviesToBeShown);
                     }
 
                     @Override

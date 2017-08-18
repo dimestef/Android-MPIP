@@ -18,20 +18,21 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp">
 
-        <TextView
-            android:text="Password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="40"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/registerPassword"
-            android:layout_weight="1" />
+            <EditText
+                android:id="@+id/registerPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:background="@drawable/inputs"
+                android:layout_weight="1"
+                android:hint="Password"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -42,40 +43,53 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp">
 
-        <TextView
-            android:text="Check passwrod"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ReEnterPassword"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_weight="11.25" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/reenterPassword"
-            android:layout_weight="1" />
+            <EditText
+                android:id="@+id/reenterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/inputs"
+                android:layout_weight="1"
+                android:hint="Re-enter password"
+                android:ems="10"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <Button
-        android:text="Back to login"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnBackLogin"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:background="@drawable/buttons"
+        android:shadowColor="#000000"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
+        android:text="Back to Login"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/btnBackLogin" />
+        android:layout_centerVertical="true"
+        android:textColor="#FFFFFF" />
+
 
     <Button
-        android:text="Register"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnRegisterUser"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/buttons"
+        android:shadowColor="#000000"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
+        android:text="Register"
         android:layout_alignTop="@+id/btnBackLogin"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/btnRegisterUser" />
+        android:textColor="#FFFFFF" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -86,21 +100,21 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <TextView
-            android:text="Username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="40"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text=""
-            android:ems="10"
-            android:id="@+id/registerUsername"
-            android:layout_weight="1" />
+            <EditText
+                android:id="@+id/registerUsername"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/inputs"
+                android:ems="10"
+                android:layout_weight="1"
+                android:hint="Username"
+                android:inputType="textPersonName" />
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
 </RelativeLayout>
