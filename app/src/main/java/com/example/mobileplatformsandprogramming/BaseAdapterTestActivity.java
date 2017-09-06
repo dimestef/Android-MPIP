@@ -30,6 +30,8 @@ public class BaseAdapterTestActivity extends AppCompatActivity {
     HashMap<String, String> checkDuplicatesHash;
     ListView wishlistMovieBaseAdapterView;
 
+	//asdasda
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
